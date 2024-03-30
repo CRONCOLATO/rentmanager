@@ -81,6 +81,26 @@ public class ReservationService {
         return reservedDays > NbJourMax;
     }
 
+    public long Create(Reservation reservation) throws ServiceException {
+        validerReservationInfo(reservation);
+        try {
+            return this.reservationDao.create(reservation);
+        }
+        catch (DaoException e){
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
+
+    public List<Reservation> findAll() throws ServiceException {
+        try{
+            return reservationDao.findAll();
+        }
+        catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
 
 
 

@@ -48,4 +48,11 @@ public class Vehicle {
     public void setNb_places(short nb_places) {
         this.nb_places = nb_places;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Le véhicule %d - %s %s a %d disponibles",id,constructeur,modele,nb_places);
+    }
+
+
 }
