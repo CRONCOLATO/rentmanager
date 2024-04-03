@@ -11,13 +11,16 @@ import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Reservation;
+import com.epf.rentmanager.dao.ReservationDao;
 import org.apache.taglibs.standard.tag.el.core.IfTag;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ClientService {
 
 	private static final int AgeMinimum = 18;
 	private ClientDao clientDao;
-	private Reservation reservation;
+	private ReservationDao reservationDao;
 
 	public static ClientService instance;
 	
@@ -80,5 +83,37 @@ public class ClientService {
 			throw new ServiceException();
 		}
 	}
-	
+
+	public void delete(Client client) throws ServiceException {
+		try {
+			for(Reservation reservation : reservationDao.findResaByClientId(client.getId())){
+				reservationDao.delete(reservation);
+			}
+			clientDao.delete(client);
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
+	public int getCount() throws ServiceException {
+		try{
+			return this.clientDao.getCount();
+		}
+		catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
+	public void update(Client client) throws ServiceException {
+		try {
+			client = validerClientInfo(client,1);
+			this.clientDao.update(client);
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
 }

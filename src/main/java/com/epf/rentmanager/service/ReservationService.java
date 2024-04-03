@@ -17,8 +17,9 @@ import com.epf.rentmanager.exception.ServiceException;
 
 import com.epf.rentmanager.model.Reservation;
 import org.apache.taglibs.standard.tag.el.core.IfTag;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class ReservationService {
 
     private Reservation reservation;
@@ -102,6 +103,71 @@ public class ReservationService {
         }
     }
 
+    public void update(Reservation reservation) throws ServiceException {
+        validerReservationInfo(reservation);
+        try {
+            this.reservationDao.update(reservation);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
 
+    public void delete(Reservation reservation) throws ServiceException {
+        try {
+            this.reservationDao.delete(reservation);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
+
+    public List<Reservation> findResaByClientId(int id) throws ServiceException {
+        try {
+            return reservationDao.findResaByClientId(id);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
+
+
+    public List<Reservation> findResaByVehicleId(long id) throws ServiceException {
+        try {
+            return reservationDao.findResaByVehicleId(id);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
+
+    public Reservation findById(int id) throws ServiceException {
+        try {
+            return reservationDao.findById(id);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException(e);
+        }
+    }
+
+    public int getCount() throws ServiceException {
+        try{
+            return reservationDao.getCount();
+        }
+        catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
+
+    public List<Vehicle> findVehiclesResaByClient(int client_id) throws ServiceException {
+        try{
+            return reservationDao.findVehiclesResaByClient(client_id);
+        }
+        catch (DaoException e) {
+            e.printStackTrace();
+            throw new ServiceException();
+        }
+    }
 
 }

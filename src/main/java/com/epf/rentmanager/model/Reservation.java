@@ -10,6 +10,7 @@ public class Reservation {
     private LocalDate debut;
     private LocalDate fin;
 
+    public Reservation(){}
     public Reservation(int id, Client client, Vehicle vehicle, LocalDate debut, LocalDate fin) {
         this.id = id;
         this.client = client;

@@ -4,16 +4,21 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+import com.epf.rentmanager.dao.ReservationDao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Client;
+import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.dao.VehicleDao;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VehicleService {
 
 	private VehicleDao vehicleDao;
 	public static VehicleService instance;
+	private ReservationDao reservationDao;
 
 	private static final int NB_place_min = 1;
 	private static final int NB_place_max = 9;
@@ -73,5 +78,39 @@ public class VehicleService {
 			throw new ServiceException();
 		}
 	}
-	
+
+	public void delete(Vehicle vehicle) throws ServiceException {
+		try {
+			for(Reservation reservation : reservationDao.findResaByVehicleId(vehicle.getId())){
+				reservationDao.delete(reservation);
+			}
+			vehicleDao.delete(vehicle);
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
+
+	public void update(Vehicle vehicle) throws ServiceException {
+		validerVehicleInfo(vehicle);
+		try {
+			this.vehicleDao.update(vehicle);
+		} catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
+	public int getCount() throws ServiceException {
+		try{
+			return this.vehicleDao.getCount();
+		}
+		catch (DaoException e) {
+			e.printStackTrace();
+			throw new ServiceException();
+		}
+	}
+
+
 }

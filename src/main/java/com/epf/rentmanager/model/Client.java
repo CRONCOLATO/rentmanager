@@ -19,9 +19,7 @@ public class Client {
 
     public Client() {}
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     public String getNom() {
         return nom;
@@ -42,6 +40,7 @@ public class Client {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public void setNom(String nom) {
         this.nom = nom;
