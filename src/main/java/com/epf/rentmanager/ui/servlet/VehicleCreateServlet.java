@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/vehicles/create")
+@WebServlet("/cars/create")
 public class VehicleCreateServlet extends HttpServlet {
 
     @Autowired

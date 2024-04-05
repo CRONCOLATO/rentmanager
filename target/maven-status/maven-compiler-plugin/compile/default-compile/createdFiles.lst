@@ -1,3 +1,4 @@
+com\epf\rentmanager\ui\servlet\VehicleServlet.class
 com\epf\rentmanager\ui\servlet\VehicleCreateServlet.class
 com\epf\rentmanager\ui\servlet\VehicleDeleteServlet.class
 com\epf\rentmanager\model\Reservation.class
@@ -27,7 +28,6 @@ com\epf\rentmanager\ui\cli\CliReservation.class
 com\epf\rentmanager\ui\cli\CliVehicule.class
 com\epf\rentmanager\service\ClientService.class
 com\epf\rentmanager\ui\cli\CliClient.class
-com\epf\rentmanager\ui\servlet\VehicleListServlet.class
 com\epf\rentmanager\ui\servlet\ReservationUpdateServlet.class
 com\epf\rentmanager\dao\VehicleDao.class
 com\epf\rentmanager\model\Client.class

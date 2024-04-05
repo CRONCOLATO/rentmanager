@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/vehicles/update")
+@WebServlet("/cars/update")
 public class VehicleUpdateServlet extends HttpServlet {
     @Autowired
     VehicleService vehicleService;
