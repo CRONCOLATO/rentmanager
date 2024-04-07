@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 
 @WebServlet("/cars/delete")
 public class VehicleDeleteServlet extends HttpServlet {
@@ -23,11 +24,21 @@ public class VehicleDeleteServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String startParam = req.getParameter("start");
+        String endParam = req.getParameter("end");
+
+        LocalDate start = LocalDate.parse(startParam);
+        LocalDate end = LocalDate.parse(endParam);
+
+        int vehicleId = Integer.parseInt(req.getParameter("id"));
+
         try {
-            vehicleService.delete(vehicleService.findById(Integer.parseInt(req.getParameter("id"))));
+            vehicleService.delete(vehicleService.findById(vehicleId), start, end);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
+
         resp.sendRedirect(req.getContextPath() + "/cars");
     }
+
 }

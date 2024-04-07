@@ -2,8 +2,6 @@ package com.epf.rentmanager.ui.servlet;
 
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Vehicle;
-import com.epf.rentmanager.service.ClientService;
-import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;

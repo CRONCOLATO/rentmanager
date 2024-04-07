@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 public class IOUtils {
 
+	private static boolean mandatory;
+
 	/**
 	 * Affiche un message sur la sortie standard
 	 * @param message
@@ -76,12 +78,12 @@ public class IOUtils {
 	}
 
 	/**
-	 * Lit une date sur l'entrée standard
-	 * @param message
-	 * @param mandatory
-	 * @return
-	 */
-	public static LocalDate readDate(String message, boolean mandatory) {
+     * Lit une date sur l'entrée standard
+     *
+     * @param message
+     * @return
+     */
+	public static LocalDate readDate(String message) {
 		print(message);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.h2.tools.DeleteDbFiles;
 
-import com.epf.rentmanager.persistence.ConnectionManager;
 
 public class FillDatabase {
 
@@ -41,7 +40,6 @@ public class FillDatabase {
                 createPreparedStatement.close();
             }
 
-            // Remplissage de la base avec des Vehicules et des Clients
             Statement stmt = connection.createStatement();
             stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Renault', 'Clio 4', 5)");
             stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Peugeot', '208', 5)");

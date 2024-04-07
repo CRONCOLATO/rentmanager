@@ -29,7 +29,7 @@ public class CliClient {
         IOUtils.print("Création d'un client");
         String firstName = IOUtils.readString("Entrez le prénom", true);
         String lastName = IOUtils.readString("Entrez le nom: ", true).toUpperCase();
-        LocalDate birthDate = IOUtils.readDate("Entre la date de naissance (jj/mm/aaaa): ", true);
+        LocalDate birthDate = IOUtils.readDate("Entre la date de naissance (jj/mm/aaaa): ");
         String email;
         do {
             email = IOUtils.readString("Entrez l'adresse courriel: ", true);

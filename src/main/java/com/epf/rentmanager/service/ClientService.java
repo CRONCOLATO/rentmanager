@@ -1,9 +1,7 @@
 package com.epf.rentmanager.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.epf.rentmanager.dao.ClientDao;
@@ -12,7 +10,6 @@ import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.dao.ReservationDao;
-import org.apache.taglibs.standard.tag.el.core.IfTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

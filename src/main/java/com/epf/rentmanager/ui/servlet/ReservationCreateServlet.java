@@ -54,27 +54,29 @@ public class ReservationCreateServlet extends HttpServlet {
         try {
             String vehicleIdParam = req.getParameter("vehicle_id");
             String clientIdParam = req.getParameter("client_id");
-            String startDateParam = req.getParameter("start");
-            String endDateParam = req.getParameter("end");
+            String debutDateParam = req.getParameter("debut");
+            String finDateParam = req.getParameter("fin");
 
-            if (vehicleIdParam != null && clientIdParam != null && startDateParam != null && endDateParam != null) {
+            if (vehicleIdParam != null && clientIdParam != null && debutDateParam != null && finDateParam != null) {
                 int vehicleId = Integer.parseInt(vehicleIdParam);
                 int clientId = Integer.parseInt(clientIdParam);
-                LocalDate startDate = LocalDate.parse(startDateParam);
-                LocalDate endDate = LocalDate.parse(endDateParam);
+                LocalDate debutDate = LocalDate.parse(debutDateParam);
+                LocalDate finDate = LocalDate.parse(finDateParam);
 
                 vehicle = vehicleService.findById(vehicleId);
                 client = clientService.findById(clientId);
 
-                Reservation newReservation = new Reservation(0, client, vehicle, startDate, endDate);
+                Reservation newReservation = new Reservation(0, client, vehicle, debutDate, finDate);
                 reservationService.Create(newReservation);
                 resp.sendRedirect(req.getContextPath() + "/rents");
                 ;
             } else {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un ou plusieurs paramètres manquants lors de la création de la réservation");
+                System.err.println("Un ou plusieurs paramètres manquants lors de la création de la réservation");
+                System.err.println("id : " + 0 +" , client_id : " + clientIdParam + " , vehcle_id : " +vehicleIdParam +" , debut : " + debutDateParam+ " , fin : " + finDateParam);
+                resp.sendRedirect(req.getContextPath() + "/rents");
             }
         } catch (NumberFormatException | DateTimeParseException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Erreur de conversion lors de la création de la réservation");
+            System.err.println("Erreur de conversion lors de la création de la réservation");
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }

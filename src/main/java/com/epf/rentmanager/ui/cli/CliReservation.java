@@ -20,20 +20,24 @@ public class CliReservation {
     }
 
     public void options() {
-
         IOUtils.print("""
-						  [1] Lister toutes les réservations
-						  [2] Lister toutes les réservations associées à un Client donné
-						  [3] Lister toutes les réservations associées à un Véhicule donné
-						  """);
+                      [1] Lister toutes les réservations
+                      [2] Lister toutes les réservations associées à un Client donné
+                      [3] Lister toutes les réservations associées à un Véhicule donné
+                      """);
         int choice = IOUtils.readInt("\nVotre choix : ");
         switch (choice) {
             case 1 -> readAll();
             case 2 -> readForClient();
-            case 3 -> readForVehicle();
+            case 3 -> {
+                LocalDate start = IOUtils.readDate("Entrez la date de début (AAAA-MM-JJ) : ");
+                LocalDate end = IOUtils.readDate("Entrez la date de fin (AAAA-MM-JJ) : ");
+                readForVehicle(start, end);
+            }
             default -> IOUtils.print("Option invalide.");
         }
     }
+
 
     public void readAll() {
         try {
@@ -55,9 +59,10 @@ public class CliReservation {
         }
     }
 
-    public void readForVehicle() {
+    public void readForVehicle(LocalDate start, LocalDate end) {
         try {
-            for (Reservation reservation : reservationService.findResaByVehicleId(cliVehicule.select().getId())) {
+            int vehicleId = cliVehicule.select().getId();
+            for (Reservation reservation : reservationService.findResaByVehicleId(vehicleId, start, end)) {
                 IOUtils.print(reservation.toString());
             }
         } catch (ServiceException e) {
@@ -65,16 +70,17 @@ public class CliReservation {
         }
     }
 
+
     public void create() {
         IOUtils.print("Création d'une réservation");
         Reservation reservation = new Reservation();
         try {
             reservation.setClient(cliClient.select());
             reservation.setVehicle(cliVehicule.select());
-            reservation.setDebut(IOUtils.readDate("Entrez une date de début de réservation : ", true));
+            reservation.setDebut(IOUtils.readDate("Entrez une date de début de réservation : "));
             LocalDate fin;
             do {
-                fin = IOUtils.readDate("Entrez une date de fin de réservation : ", true);
+                fin = IOUtils.readDate("Entrez une date de fin de réservation : ");
             } while (fin.isBefore(reservation.getDebut()));
             reservation.setFin(fin);
             IOUtils.print(String.format("La réservation a été créée avec l'identifiant %d",reservationService.Create(reservation)));

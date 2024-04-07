@@ -1,13 +1,11 @@
 package com.epf.rentmanager.service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import com.epf.rentmanager.dao.ReservationDao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
-import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.dao.VehicleDao;
@@ -24,7 +22,8 @@ public class VehicleService {
 
 	private static final int NB_place_min = 0;
 	private static final int NB_place_max = 100;
-	
+	private ReservationService reservationService;
+
 	private VehicleService() {
 		this.vehicleDao = VehicleDao.getInstance();
 	}
@@ -81,17 +80,19 @@ public class VehicleService {
 		}
 	}
 
-	public void delete(Vehicle vehicle) throws ServiceException {
+	public void delete(Vehicle vehicle, LocalDate start, LocalDate end) throws ServiceException {
 		try {
-			for(Reservation reservation : reservationDao.findResaByVehicleId(vehicle.getId())){
-				reservationDao.delete(reservation);
+			List<Reservation> reservations = reservationService.findResaByVehicleId(vehicle.getId(), start, end);
+			if (!reservations.isEmpty()) {
+				throw new ServiceException("Impossible de supprimer ce véhicule : des réservations y sont associées.");
 			}
 			vehicleDao.delete(vehicle);
 		} catch (DaoException e) {
-			e.printStackTrace();
-			throw new ServiceException();
+			throw new ServiceException("Une erreur est survenue lors de la suppression du véhicule.", e);
 		}
 	}
+
+
 
 
 	public void update(Vehicle vehicle) throws ServiceException {

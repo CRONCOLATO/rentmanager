@@ -1,15 +1,19 @@
 package com.epf.rentmanager.ui.cli;
 
 import com.epf.rentmanager.exception.ServiceException;
+import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.model.Vehicle;
+import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.utils.IOUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class CliVehicule {
 
     private final VehicleService vehicleService;
+    private ReservationService reservationService;
 
     public CliVehicule(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
@@ -55,15 +59,29 @@ public class CliVehicule {
         return vehicleList.get(index - 1);
     }
 
-    public  void delete() {
+    public void delete() {
         IOUtils.print("Supprimer un véhicule");
         try {
-            vehicleService.delete(vehicleService.findById(select().getId()));
+            Vehicle selectedVehicle = vehicleService.findById(select().getId());
+
+            LocalDate start = IOUtils.readDate("Entrez la date de début (AAAA-MM-JJ) : ");
+            LocalDate end = IOUtils.readDate("Entrez la date de fin (AAAA-MM-JJ) : ");
+
+            List<Reservation> reservations = reservationService.findResaByVehicleId(selectedVehicle.getId(), start, end);
+            if (!reservations.isEmpty()) {
+                IOUtils.print("Impossible de supprimer ce véhicule : des réservations y sont associées.");
+                return;
+            }
+
+            vehicleService.delete(selectedVehicle, start, end);
+
             IOUtils.print("Vehicle supprimé.");
         } catch (ServiceException e) {
             e.printStackTrace();
-            IOUtils.print("Impossible de supprimer ce véhicule : des réservations y sont associées.");
+            IOUtils.print("Une erreur est survenue lors de la suppression du véhicule.");
         }
     }
+
+
 
 }

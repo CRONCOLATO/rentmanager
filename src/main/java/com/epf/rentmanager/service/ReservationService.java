@@ -1,22 +1,16 @@
 package com.epf.rentmanager.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.epf.rentmanager.dao.ReservationDao;
-import com.epf.rentmanager.model.Client;
-import com.epf.rentmanager.dao.ClientDao;
 import com.epf.rentmanager.model.Vehicle;
-import com.epf.rentmanager.dao.VehicleDao;
 
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 
 import com.epf.rentmanager.model.Reservation;
-import org.apache.taglibs.standard.tag.el.core.IfTag;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +28,7 @@ public class ReservationService {
     private void validerReservationInfo(Reservation reservation) throws ServiceException {
         List<Reservation> reservations = new ArrayList<>();
         try {
-            reservations = reservationDao.findResaByVehicleId(reservation.getVehicle().getId());
+            reservations = reservationDao.findResaByVehicleId(reservation.getVehicle().getId(), reservation.getDebut(), reservation.getFin());
             reservations.removeIf(r -> r.getId() == reservation.getId()); // Supprime la réservation actuelle de la liste
         } catch (DaoException e) {
             throw new ServiceException("Erreur lors de la récupération des réservations", e);
@@ -43,26 +37,26 @@ public class ReservationService {
         LocalDate debut = reservation.getDebut();
         LocalDate fin = reservation.getFin();
 
-
-        if (reservation.getFin().isBefore(reservation.getDebut())){
+        if (fin.isBefore(debut)) {
             throw new ServiceException("La date de fin est avant la date de début");
         }
-        if (reservation.getVehicle() == null){
-            throw new ServiceException("Pas de vehicule entré");
+        if (reservation.getVehicle() == null) {
+            throw new ServiceException("Pas de véhicule entré");
         }
-        if (reservation.getClient() == null){
+        if (reservation.getClient() == null) {
             throw new ServiceException("Pas de client entré");
         }
-        if( isVehicleDoubleBooked(reservations, reservation.getDebut(), reservation.getFin())){
-            throw new ServiceException("Voiture deja réservé");
+        if (isVehicleDoubleBooked(reservations, debut, fin)) {
+            throw new ServiceException("Voiture déjà réservée");
         }
-        if ( isVehicleReservedConsecutively(reservations, reservation.getDebut(), reservation.getFin())){
-            throw new ServiceException("Voiture reservé plus de 10 jours");
+        if (isVehicleReservedConsecutively(reservations, debut, fin)) {
+            throw new ServiceException("Voiture réservée plus de 10 jours");
         }
-        if (isVehicleReservedWithoutBreak(reservations, reservation.getDebut(), reservation.getFin())){
-            throw new ServiceException("voiture réservé pour 1 mois");
+        if (isVehicleReservedWithoutBreak(reservations, debut, fin)) {
+            throw new ServiceException("Voiture réservée pour 1 mois");
         }
     }
+
 
 
     private boolean doPeriodsOverlap(LocalDate debut, LocalDate fin) {
@@ -143,14 +137,15 @@ public class ReservationService {
     }
 
 
-    public List<Reservation> findResaByVehicleId(int id) throws ServiceException {
+    public List<Reservation> findResaByVehicleId(int id, LocalDate start, LocalDate end) throws ServiceException {
         try {
-            return reservationDao.findResaByVehicleId(id);
+            return reservationDao.findResaByVehicleId(id, start, end);
         } catch (DaoException e) {
             e.printStackTrace();
             throw new ServiceException();
         }
     }
+
 
 
     public Reservation findById(int id) throws ServiceException {
