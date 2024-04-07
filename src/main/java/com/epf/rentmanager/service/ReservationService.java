@@ -31,16 +31,18 @@ public class ReservationService {
 
     private ReservationService(ReservationDao reservationDao){this.reservationDao = reservationDao;}
 
-    private void validerReservationInfo( Reservation reservation) throws ServiceException{
-        List <Reservation> reservations;
+    private void validerReservationInfo(Reservation reservation) throws ServiceException {
+        List<Reservation> reservations = new ArrayList<>();
         try {
             reservations = reservationDao.findResaByVehicleId(reservation.getVehicle().getId());
-            reservations.remove(reservationDao.findByID(reservation.getId()));
+            reservations.removeIf(r -> r.getId() == reservation.getId()); // Supprime la réservation actuelle de la liste
         } catch (DaoException e) {
-            throw new RuntimeException(e);
+            throw new ServiceException("Erreur lors de la récupération des réservations", e);
         }
-        LocalDate Debut = reservation.getDebut();
-        LocalDate Fin = reservation.getFin();
+
+        LocalDate debut = reservation.getDebut();
+        LocalDate fin = reservation.getFin();
+
 
         if (reservation.getFin().isBefore(reservation.getDebut())){
             throw new ServiceException("La date de fin est avant la date de début");
@@ -67,7 +69,7 @@ public class ReservationService {
         return !fin.isBefore(debut) ;
     }
     private boolean isVehicleDoubleBooked(List<Reservation> reservations, LocalDate debut, LocalDate fin) {
-        return reservations.stream().anyMatch(rent -> doPeriodsOverlap(reservation.getDebut(), reservation.getFin()));
+        return reservations.stream().anyMatch(rent -> doPeriodsOverlap(debut, fin));
     }
     private boolean isVehicleReservedConsecutively(List<Reservation> reservations, LocalDate debut, LocalDate fin) {
         long consecutiveDays = debut.datesUntil(fin.plusDays(1))
@@ -94,14 +96,23 @@ public class ReservationService {
     }
 
     public List<Reservation> findAll() throws ServiceException {
-        try{
-            return reservationDao.findAll();
-        }
-        catch (DaoException e) {
+        try {
+            List<Reservation> reservations = reservationDao.findAll();
+            if (reservations.isEmpty()) {
+                System.out.println("Aucune réservation trouvée dans la base de données.");
+            } else {
+                System.out.println("Nombre total de réservations trouvées : " + reservations.size());
+                for (Reservation reservation : reservations) {
+                    System.out.println("ID : " + reservation.getId() + "client id :"+reservation.getClient().getId()+"vehicle id : "+reservation.getVehicle().getId() + ", Début : " + reservation.getDebut() + ", Fin : " + reservation.getFin());
+                }
+            }
+            return reservations;
+        } catch (DaoException e) {
             e.printStackTrace();
-            throw new ServiceException();
+            throw new ServiceException("Erreur lors de la récupération des réservations", e);
         }
     }
+
 
     public void update(Reservation reservation) throws ServiceException {
         validerReservationInfo(reservation);
@@ -140,6 +151,7 @@ public class ReservationService {
             throw new ServiceException();
         }
     }
+
 
     public Reservation findById(int id) throws ServiceException {
         try {

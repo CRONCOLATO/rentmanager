@@ -23,7 +23,7 @@ public class FillDatabase {
         }
     }
 
-	private static void insertWithPreparedStatement() throws SQLException {
+    private static void insertWithPreparedStatement() throws SQLException {
         Connection connection = ConnectionManager.getConnection();
         PreparedStatement createPreparedStatement = null;
 
@@ -36,23 +36,26 @@ public class FillDatabase {
             connection.setAutoCommit(false);
 
             for (String createQuery : createTablesQueries) {
-            	createPreparedStatement = connection.prepareStatement(createQuery);
-	            createPreparedStatement.executeUpdate();
-	            createPreparedStatement.close();
+                createPreparedStatement = connection.prepareStatement(createQuery);
+                createPreparedStatement.executeUpdate();
+                createPreparedStatement.close();
             }
 
             // Remplissage de la base avec des Vehicules et des Clients
             Statement stmt = connection.createStatement();
             stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Renault', 'Clio 4', 5)");
             stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Peugeot', '208', 5)");
-            stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Seat', 'ibiza', 5)");
-            stmt.execute("INSERT INTO Vehicle(constructeur, MODELE nb_places) VALUES('Nissan', 'qashqai', 5)");
-            
+            stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Seat', 'Ibiza', 5)");
+            stmt.execute("INSERT INTO Vehicle(constructeur, MODELE, nb_places) VALUES('Nissan', 'Qashqai', 5)");
+
             stmt.execute("INSERT INTO Client(nom, prenom, email, naissance) VALUES('Dupont', 'Jean', 'jean.dupont@email.com', '1988-01-22')");
             stmt.execute("INSERT INTO Client(nom, prenom, email, naissance) VALUES('Morin', 'Sabrina', 'sabrina.morin@email.com', '1988-01-22')");
             stmt.execute("INSERT INTO Client(nom, prenom, email, naissance) VALUES('Afleck', 'Steeve', 'steeve.afleck@email.com', '1988-01-22')");
             stmt.execute("INSERT INTO Client(nom, prenom, email, naissance) VALUES('Rousseau', 'Jacques', 'jacques.rousseau@email.com', '1988-01-22')");
-                    
+
+            stmt.execute("INSERT INTO Reservation(client_id, vehicle_id, debut, fin) VALUES(1, 1, '2024-04-08', '2024-04-09')");
+
+
             connection.commit();
             System.out.println("Success!");
         } catch (SQLException e) {

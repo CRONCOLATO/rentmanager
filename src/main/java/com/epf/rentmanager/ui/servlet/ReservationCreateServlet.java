@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 
 
 @WebServlet("/rents/create")
@@ -42,22 +44,38 @@ public class ReservationCreateServlet extends HttpServlet {
         }
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/create.jsp").forward(request, response);
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        Vehicle vehicle = new Vehicle();
-        Client client = new Client();
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        Vehicle vehicle = null;
+        Client client = null;
         try {
-            vehicle = vehicleService.findById(Integer.parseInt(request.getParameter("vehicle")));
-            client = clientService.findById(Integer.parseInt(request.getParameter("client")));
+            String vehicleIdParam = req.getParameter("vehicle_id");
+            String clientIdParam = req.getParameter("client_id");
+            String startDateParam = req.getParameter("start");
+            String endDateParam = req.getParameter("end");
+
+            if (vehicleIdParam != null && clientIdParam != null && startDateParam != null && endDateParam != null) {
+                int vehicleId = Integer.parseInt(vehicleIdParam);
+                int clientId = Integer.parseInt(clientIdParam);
+                LocalDate startDate = LocalDate.parse(startDateParam);
+                LocalDate endDate = LocalDate.parse(endDateParam);
+
+                vehicle = vehicleService.findById(vehicleId);
+                client = clientService.findById(clientId);
+
+                Reservation newReservation = new Reservation(0, client, vehicle, startDate, endDate);
+                reservationService.Create(newReservation);
+                resp.sendRedirect(req.getContextPath() + "/rents");;
+            } else {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un ou plusieurs paramètres manquants lors de la création de la réservation");
+            }
+        } catch (NumberFormatException | DateTimeParseException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Erreur de conversion lors de la création de la réservation");
         } catch (ServiceException e) {
-            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur de service lors de la création de la réservation");
+        } catch (Exception e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Une erreur inattendue s'est produite lors de la création de la réservation");
         }
-        Reservation newReservation = new Reservation(0, client, vehicle, LocalDate.parse(request.getParameter("start")),LocalDate.parse(request.getParameter("end")));
-        try {
-            reservationService.Create(newReservation);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-        response.sendRedirect("/rentmanager/rents");
     }
+
 }

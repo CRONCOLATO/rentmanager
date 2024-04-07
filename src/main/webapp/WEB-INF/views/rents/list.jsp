@@ -35,9 +35,9 @@
                                     <th>Action</th>
                                 </tr>
 
-                                <c:forEach items="${reservations}" var="reservations">
+                                <c:forEach items="${reservations}" var="reservation">
                                 <tr>
-                                    <td>${rent.id}.</td>
+                                    <td>${reservation.id}</td>
                                     <td>${reservation.vehicle.constructeur} ${reservation.vehicle.modele}</td>
                                     <td>${reservation.client.prenom} ${reservation.client.nom}</td>
                                     <td>${reservation.debut}</td>

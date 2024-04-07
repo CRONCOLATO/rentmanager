@@ -32,7 +32,7 @@ public class ReservationDao {
 	}
 
 	private static final String CLIENT_FIELDS = "Client.id, nom, prenom, email, naissance";
-	private static final String VEHICLE_FIELDS = "Vehicle.id, constructeur, model, nb_places";
+	private static final String VEHICLE_FIELDS = "Vehicle.id, constructeur, modele, nb_places";
 	private static final String INNER_JOIN_TABLES = "INNER JOIN Client ON Reservation.client_id = Client.id INNER JOIN Vehicle ON Reservation.vehicle_id = Vehicle.id";
 	private static final String CREATE_RESERVATION_QUERY = "INSERT INTO Reservation(client_id, vehicle_id, debut, fin) VALUES(?, ?, ?, ?);";
 	private static final String DELETE_RESERVATION_QUERY = "DELETE FROM Reservation WHERE id=?;";
@@ -61,7 +61,7 @@ public class ReservationDao {
 			throw new DaoException("Erreur de création de la reservation");
 		}
 	}
-	
+
 	public long delete(Reservation reservation) throws DaoException {
 		try {
 			Connection connection = ConnectionManager.getConnection();
@@ -76,7 +76,7 @@ public class ReservationDao {
 		}
 	}
 
-	
+
 	public List<Reservation> findResaByClientId(int clientId) throws DaoException {
 		List<Reservation> reservations = new ArrayList<Reservation>();
 		try {
@@ -91,7 +91,7 @@ public class ReservationDao {
 
 			while (resultSet.next()){
 				int id = resultSet.getInt("id");
-				Client client = clientService.findById((int) clientId);
+				Client client = clientService.findById(resultSet.getInt("client_id"));
 				Vehicle vehicle = vehicleService.findById(resultSet.getInt("vehicle_id"));
 				LocalDate debut = resultSet.getDate("debut").toLocalDate();
 				LocalDate fin = resultSet.getDate("fin").toLocalDate();
@@ -101,17 +101,17 @@ public class ReservationDao {
 		catch (SQLException e){
 			throw new DaoException("ID client incorrect");
 		} catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
-        return reservations;
+			throw new RuntimeException(e);
+		}
+		return reservations;
 	}
 
-	public List<Reservation> findResaByVehicleId(int vehicleId) throws DaoException {
+	public List<Reservation> findResaByVehicleId(int vehicle_Id) throws DaoException {
 		List<Reservation> reservations = new ArrayList<Reservation>();
 		try {
 			Connection connection = ConnectionManager.getConnection();
 			PreparedStatement statement = connection.prepareStatement(FIND_RESERVATIONS_BY_VEHICLE_QUERY);
-			statement.setObject(1, vehicleId);
+			statement.setObject(1, vehicle_Id);
 			ResultSet resultSet = statement.executeQuery();
 
 			Object[] services = getServices();
@@ -122,19 +122,27 @@ public class ReservationDao {
 				int id = resultSet.getInt("id");
 				LocalDate debut = resultSet.getDate("debut").toLocalDate();
 				LocalDate fin = resultSet.getDate("fin").toLocalDate();
-				Client client = clientService.findById(resultSet.getInt("client"));
-				Vehicle vehicle = vehicleService.findById(id);
+				Client client = clientService.findById(resultSet.getInt("client_id"));
+				Vehicle vehicle = vehicleService.findById(resultSet.getInt("vehicle_id"));
+
+				System.out.println("Réservation trouvée - ID: " + id +", client id : " + client + ", vehicle id : "+ vehicle + ", Début: " + debut + ", Fin: " + fin);
 
 				reservations.add(new Reservation(id, client, vehicle, debut, fin));
 			}
 		}
 		catch (SQLException e){
+			System.err.println("Erreur SQL lors de la récupération des réservations pour le véhicule avec l'ID: " + vehicle_Id);
+			e.printStackTrace();
 			throw new DaoException("ID Vehicule incorrect");
 		} catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
-        return reservations;
+			System.err.println("Erreur de service lors de la récupération des réservations pour le véhicule avec l'ID: " + vehicle_Id);
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		return reservations;
 	}
+
+
 
 	public Reservation findByID(int id) throws DaoException {
 		Reservation reservation = null;
