@@ -30,20 +30,23 @@ public class ReservationCreateServlet extends HttpServlet {
     VehicleService vehicleService;
     @Autowired
     ReservationService reservationService;
+
     @Override
     public void init() throws ServletException {
         super.init();
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try{
-            request.setAttribute("vehicles",vehicleService.findAll());
-            request.setAttribute("clients",clientService.findAll());
-        }catch (ServiceException e){
+        try {
+            request.setAttribute("vehicles", vehicleService.findAll());
+            request.setAttribute("clients", clientService.findAll());
+        } catch (ServiceException e) {
             e.printStackTrace();
         }
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/create.jsp").forward(request, response);
     }
+
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         Vehicle vehicle = null;
@@ -65,17 +68,16 @@ public class ReservationCreateServlet extends HttpServlet {
 
                 Reservation newReservation = new Reservation(0, client, vehicle, startDate, endDate);
                 reservationService.Create(newReservation);
-                resp.sendRedirect(req.getContextPath() + "/rents");;
+                resp.sendRedirect(req.getContextPath() + "/rents");
+                ;
             } else {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un ou plusieurs paramètres manquants lors de la création de la réservation");
             }
         } catch (NumberFormatException | DateTimeParseException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Erreur de conversion lors de la création de la réservation");
         } catch (ServiceException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur de service lors de la création de la réservation");
-        } catch (Exception e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Une erreur inattendue s'est produite lors de la création de la réservation");
+            throw new RuntimeException(e);
         }
-    }
 
+    }
 }

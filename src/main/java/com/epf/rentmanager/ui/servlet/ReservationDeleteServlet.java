@@ -16,6 +16,7 @@ import java.io.IOException;
 public class ReservationDeleteServlet extends HttpServlet {
     @Autowired
     ReservationService reservationService;
+
     @Override
     public void init() throws ServletException {
         super.init();
@@ -23,10 +24,17 @@ public class ReservationDeleteServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            reservationService.delete(reservationService.findById(Integer.parseInt(request.getParameter("id"))));
-        } catch (ServiceException e) {
-            e.printStackTrace();
+        String idParam = request.getParameter("id");
+        if (idParam != null && !idParam.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idParam);
+                reservationService.delete(reservationService.findById(id));
+            } catch (NumberFormatException | ServiceException e) {
+                e.printStackTrace();
+                System.err.println("NumberFormatException");
+            }
+        } else {
+            System.err.println("erreur id mmanquant");
         }
         response.sendRedirect("/rentmanager/rents");
     }

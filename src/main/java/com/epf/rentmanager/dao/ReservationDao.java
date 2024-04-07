@@ -208,12 +208,16 @@ public class ReservationDao {
 			statement.setDate(3, Date.valueOf(reservation.getDebut()));
 			statement.setDate(4, Date.valueOf(reservation.getFin()));
 			statement.setInt(5,reservation.getId());
-			statement.executeUpdate();
+			int rowsUpdated = statement.executeUpdate();
+			if (rowsUpdated == 0) {
+				throw new DaoException("La mise à jour de la réservation a échoué, aucune ligne mise à jour dans la base de données.");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// throw new DaoException("Erreur lors de la mise à jour de la réservation");
+			throw new DaoException("Erreur lors de la mise à jour de la réservation dans la base de données.", e);
 		}
 	}
+
 
 	public Reservation findById(int id) throws DaoException {
 		Reservation reservation = null;
@@ -226,7 +230,7 @@ public class ReservationDao {
 
 			while (resultSet.next()) {
 				Client client = new Client(resultSet.getInt("client_id"), resultSet.getString("nom"),resultSet.getString("prenom"), resultSet.getString("email"),resultSet.getDate("naissance").toLocalDate());
-				Vehicle vehicle = new Vehicle(resultSet.getInt("vehicle_id"),resultSet.getString("constructeur"), resultSet.getString("model"),resultSet.getShort("nb_places"));
+				Vehicle vehicle = new Vehicle(resultSet.getInt("vehicle_id"),resultSet.getString("constructeur"), resultSet.getString("modele"),resultSet.getShort("nb_places"));
 				reservation = new Reservation(id, client, vehicle, resultSet.getDate("debut").toLocalDate(),resultSet.getDate("fin").toLocalDate());
 			}
 		} catch (SQLException e) {

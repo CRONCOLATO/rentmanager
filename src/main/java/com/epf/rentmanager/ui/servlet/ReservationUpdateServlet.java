@@ -36,7 +36,7 @@ public class ReservationUpdateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.reservation_id = Integer.parseInt(request.getParameter("id"));
         try{
-            request.setAttribute("rent",reservationService.findById(reservation_id));
+            request.setAttribute("reservation",reservationService.findById(reservation_id));
             request.setAttribute("vehicles",vehicleService.findAll());
             request.setAttribute("clients",clientService.findAll());
         }catch (ServiceException e){
@@ -46,21 +46,39 @@ public class ReservationUpdateServlet extends HttpServlet {
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-        Vehicle vehicle = new Vehicle();
-        Client client = new Client();
+        Vehicle vehicle = null;
+        Client client = null;
         try {
-            System.out.println(request.getParameter("vehicle"));
-            vehicle = vehicleService.findById(Integer.parseInt(request.getParameter("vehicle")));
-            client = clientService.findById(Integer.parseInt(request.getParameter("client")));
-        } catch (ServiceException e) {
+            String vehicleIdParam = request.getParameter("vehicle");
+            String clientIdParam = request.getParameter("client");
+
+            if (vehicleIdParam != null && !vehicleIdParam.isEmpty()) {
+                int vehicleId = Integer.parseInt(vehicleIdParam);
+                vehicle = vehicleService.findById(vehicleId);
+            }
+
+            if (clientIdParam != null && !clientIdParam.isEmpty()) {
+                int clientId = Integer.parseInt(clientIdParam);
+                client = clientService.findById(clientId);
+            }
+        } catch (NumberFormatException | ServiceException e) {
             e.printStackTrace();
         }
-        Reservation updatedRent = new Reservation(reservation_id, client, vehicle, LocalDate.parse(request.getParameter("start")),LocalDate.parse(request.getParameter("end")));
-        try {
-            reservationService.update(updatedRent);
-        } catch (ServiceException e) {
-            e.printStackTrace();
+
+        if (vehicle != null && client != null) {
+            try {
+                Reservation updatedReservation = new Reservation(reservation_id, client, vehicle,
+                        LocalDate.parse(request.getParameter("debut")),
+                        LocalDate.parse(request.getParameter("fin")));
+                reservationService.update(updatedReservation);
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("Failed to update reservation. Vehicle or client not found.");
         }
+
         response.sendRedirect("/rentmanager/rents");
     }
+
 }
