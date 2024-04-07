@@ -106,7 +106,7 @@ public class ReservationDao {
         return reservations;
 	}
 
-	public List<Reservation> findResaByVehicleId(long vehicleId) throws DaoException {
+	public List<Reservation> findResaByVehicleId(int vehicleId) throws DaoException {
 		List<Reservation> reservations = new ArrayList<Reservation>();
 		try {
 			Connection connection = ConnectionManager.getConnection();
@@ -147,7 +147,7 @@ public class ReservationDao {
 
 			while (resultSet.next()) {
 				Client client = new Client(resultSet.getInt("clientId"), resultSet.getString("nom"),resultSet.getString("prenom"), resultSet.getString("email"),resultSet.getDate("naissance").toLocalDate());
-				Vehicle vehicle = new Vehicle(resultSet.getLong("vehicleId"),resultSet.getString("constructeur"), resultSet.getString("modele"),resultSet.getShort("nb_places"));
+				Vehicle vehicle = new Vehicle(resultSet.getInt("vehicleId"),resultSet.getString("constructeur"), resultSet.getString("modele"),resultSet.getShort("nb_places"));
 				reservation = new Reservation(id, client , vehicle, resultSet.getDate("debut").toLocalDate(),resultSet.getDate("fin").toLocalDate());
 			}
 		} catch (SQLException e) {
@@ -171,7 +171,7 @@ public class ReservationDao {
 			while (resultSet.next()){
 				int id = resultSet.getInt("id");
 				Client client = clientService.findById(resultSet.getInt("client_id"));
-				Vehicle vehicle = vehicleService.findById(resultSet.getLong("vehicle_id"));
+				Vehicle vehicle = vehicleService.findById(resultSet.getInt("vehicle_id"));
 				LocalDate debut = resultSet.getDate("debut").toLocalDate();
 				LocalDate fin = resultSet.getDate("fin").toLocalDate();
 				reservations.add(new Reservation(id, client, vehicle, debut,fin));
@@ -249,9 +249,9 @@ public class ReservationDao {
 				PreparedStatement preparedStatement = connection.prepareStatement(FIND_VEHICLES_RESA_BY_CLIENT_QUERY)
 		) {
 			preparedStatement.setLong(1, client_id);
-			ResultSet rs = preparedStatement.executeQuery();
-			while (rs.next()) {
-				clientVehicles.add(new Vehicle(rs.getInt("Vehicle.id"), rs.getString("constructeur"),rs.getString("modele"), rs.getShort("nb_places")));
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				clientVehicles.add(new Vehicle(resultSet.getInt("Vehicle.id"), resultSet.getString("constructeur"),resultSet.getString("modele"), resultSet.getInt("nb_places")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

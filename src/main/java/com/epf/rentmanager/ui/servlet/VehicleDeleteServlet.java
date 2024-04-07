@@ -22,12 +22,12 @@ public class VehicleDeleteServlet extends HttpServlet {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            vehicleService.delete(vehicleService.findById(Integer.parseInt(request.getParameter("id"))));
+            vehicleService.delete(vehicleService.findById(Integer.parseInt(req.getParameter("id"))));
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/rentmanager/vehicles");
+        resp.sendRedirect(req.getContextPath() + "/cars");
     }
 }

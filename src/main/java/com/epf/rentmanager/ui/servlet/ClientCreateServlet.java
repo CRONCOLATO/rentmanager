@@ -27,14 +27,20 @@ public class ClientCreateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/create.jsp").forward(request, response);
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        Client newClient = new Client(0, request.getParameter("nom"),request.getParameter("prenom"),request.getParameter("email"), LocalDate.parse(request.getParameter("naissance")));
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        String naissanceParam = req.getParameter("naissance");
+        LocalDate naissance = null;
+        if (naissanceParam != null && !naissanceParam.isEmpty()) {
+            naissance = LocalDate.parse(naissanceParam);
+        }
+
+        Client newClient = new Client(0, req.getParameter("nom"), req.getParameter("prenom"), req.getParameter("email"), naissance);
         try {
             clientService.create(newClient);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/rentmanager/users");
+        resp.sendRedirect(req.getContextPath() + "/users");
     }
 }

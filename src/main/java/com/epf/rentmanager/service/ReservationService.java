@@ -132,7 +132,7 @@ public class ReservationService {
     }
 
 
-    public List<Reservation> findResaByVehicleId(long id) throws ServiceException {
+    public List<Reservation> findResaByVehicleId(int id) throws ServiceException {
         try {
             return reservationDao.findResaByVehicleId(id);
         } catch (DaoException e) {

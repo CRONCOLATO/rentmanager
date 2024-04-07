@@ -13,6 +13,7 @@ import com.epf.rentmanager.exception.ServiceException;
 import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.dao.ReservationDao;
 import org.apache.taglibs.standard.tag.el.core.IfTag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class ClientService {
 
 	private static final int AgeMinimum = 18;
 	private ClientDao clientDao;
+	@Autowired
 	private ReservationDao reservationDao;
 
 	public static ClientService instance;

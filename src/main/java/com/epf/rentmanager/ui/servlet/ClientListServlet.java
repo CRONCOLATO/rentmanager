@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet("/users/details")
+@WebServlet("/users/list")
 public class ClientListServlet extends HttpServlet {
     @Autowired
     ClientService clientService;
@@ -26,15 +26,22 @@ public class ClientListServlet extends HttpServlet {
         super.init();
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int client_id = Integer.parseInt(request.getParameter("id"));
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int compteur;
         try {
-            request.setAttribute("client", this.clientService.findById(client_id));
-            request.setAttribute("reservations", this.reservationService.findResaByClientId(client_id));
-            request.setAttribute("clientVehicles", this.reservationService.findVehiclesResaByClient(client_id));
+            compteur = clientService.getCount();
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+        int client_id = compteur;
+        try {
+            req.setAttribute("client", this.clientService.findById(client_id));
+            req.setAttribute("reservations", this.reservationService.findResaByClientId(client_id));
+            req.setAttribute("clientVehicles", this.reservationService.findVehiclesResaByClient(client_id));
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/details.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher("/WEB-INF/views/users/list.jsp").forward(req, resp);
+
     }
 }

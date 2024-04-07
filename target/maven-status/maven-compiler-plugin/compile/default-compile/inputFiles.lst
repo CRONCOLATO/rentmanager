@@ -8,6 +8,7 @@ C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\c
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\HomeServlet.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\ReservationCreateServlet.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\exception\DaoException.java
+C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\VehiculeListServlet.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\dao\ClientDao.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\ClientService.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\ClientCreateServlet.java
@@ -16,6 +17,7 @@ C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\c
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\ReservationDeleteServlet.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\cli\CliMenu.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\cli\CliVehicule.java
+C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\ui\servlet\ClientDetailServlet.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Reservation.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\model\Client.java
 C:\Users\Clement\OneDrive\Bureau\JAVA 4A\rentmanager\rentmanager\src\main\java\com\epf\rentmanager\service\ReservationService.java

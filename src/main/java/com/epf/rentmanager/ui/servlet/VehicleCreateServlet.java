@@ -26,15 +26,24 @@ public class VehicleCreateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/create.jsp").forward(request, response);
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        Vehicle newVehicle = new Vehicle(0, request.getParameter("constructeur"),request.getParameter("modele"), (short) Integer.parseInt(request.getParameter("Nb_places")));
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        String nbPlacesParam = req.getParameter("nb_places");
+        int nbPlaces = 0;
+        if (nbPlacesParam != null) {
+            try {
+                nbPlaces = Integer.parseInt(nbPlacesParam);
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+        Vehicle newVehicle = new Vehicle(0, req.getParameter("constructeur"), req.getParameter("modele"), nbPlaces);
         try {
             vehicleService.create(newVehicle);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/rentmanager/vehicles");
+        resp.sendRedirect(req.getContextPath() + "/cars");
     }
 
 }

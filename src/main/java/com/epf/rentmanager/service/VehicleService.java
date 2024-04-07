@@ -11,6 +11,7 @@ import com.epf.rentmanager.model.Client;
 import com.epf.rentmanager.model.Reservation;
 import com.epf.rentmanager.model.Vehicle;
 import com.epf.rentmanager.dao.VehicleDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,10 +19,11 @@ public class VehicleService {
 
 	private VehicleDao vehicleDao;
 	public static VehicleService instance;
+	@Autowired
 	private ReservationDao reservationDao;
 
-	private static final int NB_place_min = 1;
-	private static final int NB_place_max = 9;
+	private static final int NB_place_min = 0;
+	private static final int NB_place_max = 100;
 	
 	private VehicleService() {
 		this.vehicleDao = VehicleDao.getInstance();
@@ -59,7 +61,7 @@ public class VehicleService {
 		}
 	}
 
-	public Vehicle findById(long id) throws ServiceException {
+	public Vehicle findById(int id) throws ServiceException {
 		try {
 			return this.vehicleDao.findById(id);
 		}

@@ -33,14 +33,14 @@ public class VehicleUpdateServlet extends HttpServlet {
         }
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/update.jsp").forward(request, response);
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        Vehicle newVehicle = new Vehicle(vehicle_id, request.getParameter("constructeur"),request.getParameter("modele"), (short) Integer.parseInt(request.getParameter("Nb_places")));
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        Vehicle newVehicle = new Vehicle(vehicle_id, req.getParameter("constructeur"),req.getParameter("modele"), Integer.parseInt(req.getParameter("nb_places")));
         try {
             vehicleService.update(newVehicle);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/rentmanager/vehicles");
+        resp.sendRedirect(req.getContextPath() + "/cars");
     }
 }

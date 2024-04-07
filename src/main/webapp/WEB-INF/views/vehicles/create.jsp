@@ -29,16 +29,12 @@
                         <!-- est d�crit an l'attribut "method" de la balise forme -->
                         <!-- action indique � quel "cible" sera envoyr la requ�te, ici notre Servlet qui sera bind sur -->
                         <!-- /vehicles/create -->
-                        <form class="form-horizontal" method="post">
+                        <form class="form-horizontal" method="POST">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label for="manufacturer" class="col-sm-2 control-label">Marque</label>
-
-									<!-- Pour r�up�rer la valeur rentr�e dans un champ input de cette jsp au niveau de votre servlet -->
-									<!-- vous devez passer par les methodes getParameter de l'objet request, est sp�cifiant la valeur -->
-									<!-- de l'attribut "name" de l'input -->
+                                    <label for="constructeur" class="col-sm-2 control-label">Constructeur</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Marque" required>
+                                        <input type="text" class="form-control" id="constructeur" name="constructeur" placeholder="Constructeur" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -49,20 +45,30 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="seats" class="col-sm-2 control-label">Nombre de places</label>
-
+                                    <label for="nb_places" class="col-sm-2 control-label">Nombre de places</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="seats" name="seats" placeholder="Nombre de places" required>
+                                        <input type="number" class="form-control" id="nb_places" name="nb_places" placeholder="Nombre de places" required>
                                     </div>
                                 </div>
                                 <!--
                                 <div class="form-group">
                                     <label for="owner" class="col-sm-2 control-label">Propriétaire</label>
-
                                     <div class="col-sm-10">
                                         <select class="form-control" id="owner" name="owner">
+
+
+
+
+
                                             <option value="1">John Doe</option>
                                             <option value="2">Jane Doe</option>
+
+
+
+
+
+
+
                                         </select>
                                     </div>
                                 </div>

@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 /**
  * Unit test for simple App.
@@ -53,7 +54,9 @@ public class AppTest {
 
     @Test
     public void testAddClient() throws ServiceException, DaoException {
-        Client client = new Client(0, "Roncolato", "Clement", "roncolato.clement@email.com", LocalDate.now());
+        LocalDate dateActuelle = LocalDate.now();
+        LocalDate dateIlYa20Ans = dateActuelle.minus(Period.ofYears(20));
+        Client client = new Client((int)1L, "Roncolato", "Clement", "roncolato.clement@email.com", dateIlYa20Ans);
         Mockito.when(clientDao.create(client)).thenReturn(1L);
         clientService.create(client);
 
@@ -62,11 +65,12 @@ public class AppTest {
 
     @Test
     public void testCreateVehicle() throws ServiceException, DaoException {
-        Vehicle vehicle = new Vehicle((long) 0L,"Tesla","Model S", (short) 4);
-        Mockito.when(vehicleDao.create(vehicle)).thenReturn(1L);
+        Vehicle vehicle = new Vehicle((int) 1L, "Tesla", "Model S", (short) 4);
+        Mockito.lenient().when(vehicleDao.create(vehicle)).thenReturn(1L);
         vehicleService.update(vehicle);
         assertEquals(1L, vehicle.getId());
     }
+
 
     @Test
     public void testDeleteReservation() throws ServiceException, DaoException {
